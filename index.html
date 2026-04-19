@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>App IA Solar PRO — My Vision Art Design</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--sol:#FF8C00;--sol2:#FFB347;--cielo:#1B6CA8;--cielo2:#4A9FD4;--verde:#2ecc71;--purp:#a47fd4;--rojo:#e74c3c;--dark:#0a0f1a;}
+body{font-family:'Courier New',monospace;background:var(--dark);color:#fff;min-height:100vh;padding-bottom:90px;}
+@keyframes bounce2{from{transform:translateY(0)}to{transform:translateY(-7px)}}
+@keyframes drift{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+@keyframes drip{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADER */
+.header{background:linear-gradient(150deg,#060d1a,#0d3d6e,var(--cielo));padding:20px 20px 16px;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,140,0,.25),transparent 65%);border-radius:50%;}
+.header-drip{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sol),var(--cielo2),#ff2d9b,var(--sol2));}
+.header-eye{font-size:.5rem;font-weight:700;letter-spacing:4px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:5px;position:relative;z-index:2;}
+.header-title{font-family:Georgia,serif;font-size:clamp(1.3rem,4vw,1.9rem);position:relative;z-index:2;margin-bottom:4px;}
+.header-title .s1{color:var(--sol2);text-shadow:2px 2px 0 #000;}
+.header-title .s2{color:var(--cielo2);text-shadow:2px 2px 0 #000;}
+.header-sub{font-size:.58rem;color:rgba(255,255,255,.4);position:relative;z-index:2;margin-bottom:10px;}
+.header-team{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:5px 14px;border-radius:40px;font-size:.62rem;position:relative;z-index:2;}
+.team-dot{width:5px;height:5px;background:var(--sol);border-radius:50%;animation:drip 2s infinite;}
+.char-header{position:absolute;top:6px;cursor:pointer;z-index:3;}
+
+/* TABS */
+.tabs{display:flex;background:#111827;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto;position:sticky;top:0;z-index:50;}
+.tab{flex:1;min-width:60px;padding:10px 2px;border:none;cursor:pointer;font-family:'Courier New',monospace;font-weight:700;font-size:.52rem;letter-spacing:1px;text-transform:uppercase;transition:all .2s;background:transparent;color:rgba(255,255,255,.28);border-bottom:2px solid transparent;}
+.tab.active{background:rgba(255,140,0,.12);color:var(--sol2);border-bottom-color:var(--sol);}
+
+/* CONTENT */
+.content{max-width:640px;margin:0 auto;padding:18px 14px 20px;animation:fadeIn .3s ease;}
+.pane{display:none;}.pane.active{display:block;}
+.sec-eye{font-size:.52rem;font-weight:700;letter-spacing:4px;color:var(--sol);text-transform:uppercase;margin-bottom:4px;display:block;}
+.sec-title{font-family:Georgia,serif;font-size:1.2rem;margin-bottom:14px;}
+.sec-title span{color:var(--sol2);}
+
+/* CARDS */
+.card{background:rgba(255,255,255,.04);border-radius:13px;padding:16px;margin-bottom:13px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.card-sol::before{background:var(--sol);}
+.card-cielo::before{background:var(--cielo);}
+.card-verde::before{background:var(--verde);}
+.card-purp::before{background:var(--purp);}
+
+/* INPUTS */
+.inp{width:100%;padding:11px 13px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:#fff;font-size:.88rem;outline:none;font-family:'Courier New',monospace;margin-bottom:9px;}
+.select{width:100%;padding:11px 12px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:#fff;font-size:.86rem;outline:none;font-family:'Courier New',monospace;}
+.inp-label{font-size:.52rem;color:rgba(255,255,255,.32);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:5px;}
+
+/* BUTTONS */
+.btn-main{width:100%;padding:13px;border-radius:40px;border:none;background:linear-gradient(90deg,var(--sol),var(--sol2));color:#fff;font-size:.74rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Courier New',monospace;margin-bottom:14px;}
+.btn-main:disabled{background:rgba(255,140,0,.3);cursor:not-allowed;}
+.btn-sec{width:100%;padding:10px;border-radius:40px;border:1px solid var(--cielo);background:rgba(27,108,168,.14);color:var(--cielo2);font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Courier New',monospace;margin-top:10px;}
+
+/* MODE BTNS */
+.mode-btns{display:flex;gap:8px;margin-bottom:12px;}
+.mode-btn{flex:1;padding:9px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.45);font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Courier New',monospace;transition:all .2s;}
+.mode-btn.active{border-color:var(--sol);background:rgba(255,140,0,.15);color:var(--sol2);}
+
+/* CITY GRID */
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.city-btn{padding:8px 4px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:.58rem;font-weight:700;cursor:pointer;font-family:'Courier New',monospace;text-align:center;line-height:1.4;transition:all .2s;}
+.city-btn.active{border-color:var(--sol);background:rgba(255,140,0,.18);color:var(--sol2);}
+.city-hsp{font-size:.5rem;color:rgba(255,255,255,.25);margin-top:1px;}
+.city-btn.active .city-hsp{color:var(--sol2);}
+
+/* INFO BAR */
+.info-bar{background:rgba(255,140,0,.07);border:1px solid rgba(255,140,0,.15);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.66rem;color:rgba(255,255,255,.5);display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px;}
+.result-box{background:rgba(255,255,255,.05);border-radius:11px;padding:12px;position:relative;overflow:hidden;}
+.result-bar{position:absolute;top:0;left:0;right:0;height:2px;}
+.result-val{font-family:Georgia,serif;font-size:1.3rem;line-height:1;}
+.result-label{font-size:.5rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;margin:3px 0 2px;}
+.result-sub{font-size:.52rem;color:rgba(255,255,255,.18);}
+.eco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+.eco-box{border-radius:11px;padding:12px 7px;text-align:center;}
+.eco-val{font-family:Georgia,serif;font-size:1.05rem;}
+.eco-label{font-size:.5rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+.ia-box{background:rgba(255,255,255,.04);border:1px solid rgba(164,127,212,.22);border-radius:13px;padding:16px;position:relative;overflow:hidden;}
+.ia-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purp),var(--cielo2),var(--sol));}
+.ia-label{font-size:.52rem;color:var(--purp);letter-spacing:3px;text-transform:uppercase;margin-bottom:9px;}
+.ia-text{font-size:.75rem;color:rgba(255,255,255,.65);line-height:1.85;white-space:pre-wrap;}
+
+/* CABLE RESULTS */
+.cable-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.cable-box{background:rgba(255,255,255,.05);border-radius:9px;padding:11px;}
+.cable-val{font-family:Georgia,serif;font-size:1.2rem;}
+.cable-label{font-size:.52rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+.cable-result{background:rgba(46,204,113,.07);border:1px solid rgba(46,204,113,.18);border-radius:11px;padding:13px;margin-bottom:10px;}
+.cable-name{font-size:.88rem;color:#fff;font-weight:700;margin-bottom:4px;}
+.cable-price{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.45);}
+.warning{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:9px;padding:11px;font-size:.72rem;color:#ff6b6b;margin-top:10px;}
+
+/* MATERIAL */
+.mat-item{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:rgba(255,255,255,.03);border-radius:10px;margin-bottom:7px;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .2s;}
+.mat-item:hover{background:rgba(255,140,0,.07);border-color:var(--sol);}
+.mat-name{font-size:.78rem;color:#fff;font-weight:600;}
+.mat-price{font-size:.6rem;color:rgba(255,255,255,.3);margin-top:2px;}
+.mat-add{background:rgba(255,140,0,.13);border:1px solid rgba(255,140,0,.33);border-radius:20px;padding:4px 11px;color:var(--sol2);font-size:.68rem;font-weight:700;}
+.selected-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.qty-btn{width:24px;height:24px;border-radius:50%;border:none;color:#fff;cursor:pointer;font-size:.9rem;font-family:monospace;}
+.qty-minus{background:rgba(255,255,255,.1);}
+.qty-plus{background:rgba(255,140,0,.18);color:var(--sol2);}
+.qty-val{color:#fff;font-weight:700;min-width:18px;text-align:center;font-size:.82rem;}
+.subtotal{display:flex;justify-content:space-between;margin-top:10px;padding:9px 0;font-weight:700;}
+
+/* PERSONAL */
+.work-item{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:rgba(255,255,255,.03);border-radius:10px;margin-bottom:7px;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .2s;}
+.work-item:hover{background:rgba(27,108,168,.08);border-color:var(--cielo);}
+.gest-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;}
+.gest-check{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#fff;flex-shrink:0;transition:background .2s;}
+
+/* PRESUPUESTO */
+.desglose-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.78rem;}
+.total-final{display:flex;justify-content:space-between;padding:14px 0 4px;align-items:center;}
+.resumen-box{background:linear-gradient(135deg,var(--cielo),#0a2a4a);border-radius:17px;padding:22px 18px;position:relative;overflow:hidden;margin-top:14px;}
+.resumen-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sol),var(--cielo2),#ff2d9b);}
+.resumen-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.resumen-item{background:rgba(255,255,255,.08);border-radius:9px;padding:11px 9px;text-align:center;}
+.total-box{background:rgba(255,140,0,.14);border:1px solid rgba(255,140,0,.44);border-radius:11px;padding:13px;text-align:center;}
+
+/* NORMATIVA */
+.norm-card{background:rgba(255,255,255,.04);border-radius:13px;margin-bottom:13px;overflow:hidden;}
+.norm-head{padding:13px 16px;display:flex;align-items:center;gap:11px;}
+.norm-body{padding:0 16px 13px;}
+.norm-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.norm-key{font-weight:700;min-width:100px;flex-shrink:0;}
+.norm-val{color:rgba(255,255,255,.45);}
+
+/* QUIÉNES */
+.afri-card{background:linear-gradient(135deg,rgba(255,140,0,.1),rgba(27,108,168,.1));border:1px solid rgba(255,140,0,.33);border-radius:16px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+.firma-box{background:var(--dark);border:1px solid rgba(255,140,0,.25);border-radius:16px;padding:28px 22px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;}
+.firma-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sol),var(--cielo2),#ff2d9b,var(--sol2));}
+.equipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.eq-card{background:rgba(255,255,255,.04);border-radius:13px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.eq-card:hover{background:rgba(255,255,255,.08);}
+.contacto-box{background:linear-gradient(135deg,var(--cielo),#0a2a4a);border-radius:16px;padding:22px 18px;position:relative;overflow:hidden;}
+
+/* HELP BTN */
+.help-btn{position:fixed;bottom:22px;right:18px;z-index:90;background:var(--dark);border-radius:50%;width:56px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;gap:1px;border:none;}
+.help-btn:hover{transform:scale(1.15);}
+
+/* HELPER POPUP */
+.helper-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:flex;align-items:flex-end;justify-content:center;padding:0 0 90px;}
+.helper-popup{background:var(--dark);border-radius:18px;padding:22px 24px;max-width:340px;width:90%;position:relative;font-family:'Courier New',monospace;}
+.helper-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.helper-msg{background:rgba(255,255,255,.05);border-radius:10px;padding:13px 15px;margin-bottom:14px;min-height:54px;font-size:.82rem;color:#fff;line-height:1.75;}
+.helper-dots{display:flex;gap:7px;justify-content:center;}
+.helper-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .3s;}
+.helper-close{position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:1.1rem;}
+
+/* PIXEL CHARS */
+.char{image-rendering:pixelated;cursor:pointer;}
+.char-bounce{animation:bounce2 0.6s ease infinite alternate;}
+.char-drift{animation:drift 3s ease-in-out infinite;}
+
+/* FOOTER */
+.footer{background:#060d1a;padding:13px;text-align:center;border-top:1px solid rgba(255,255,255,.05);}
+.footer-text{font-size:.5rem;color:rgba(255,255,255,.18);letter-spacing:2px;text-transform:uppercase;}
+
+/* GRID UTILS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div id="char-afri-header" class="char-header char-drift" style="left:6px" onclick="showHelper('afri')">
+    <svg width="34" height="48" viewBox="0 0 28 40" style="image-rendering:pixelated">
+      <rect x="4" y="0" width="6" height="3" fill="#2a1a0a"/>
+      <rect x="3" y="3" width="8" height="6" fill="#c8814a"/>
+      <rect x="3" y="6" width="2" height="2" fill="#1a0800"/>
+      <rect x="8" y="6" width="2" height="2" fill="#1a0800"/>
+      <rect x="3" y="9" width="8" height="5" fill="#8B1A1A"/>
+      <rect x="2" y="10" width="1" height="3" fill="#8B1A1A"/>
+      <rect x="11" y="10" width="1" height="3" fill="#8B1A1A"/>
+      <rect x="4" y="14" width="2" height="4" fill="#444"/>
+      <rect x="8" y="14" width="2" height="4" fill="#444"/>
+      <rect x="15" y="9" width="9" height="6" fill="#ff9ec4"/>
+      <rect x="13" y="7" width="3" height="3" fill="#ff6b9d"/>
+      <rect x="22" y="7" width="3" height="3" fill="#ff6b9d"/>
+    </svg>
+  </div>
+  <div id="char-axo-header" class="char-header char-drift" style="right:6px;animation-delay:0.5s" onclick="showHelper('axo')">
+    <svg width="28" height="22" viewBox="0 0 28 22" style="image-rendering:pixelated">
+      <rect x="4" y="4" width="20" height="10" fill="#ff9ec4"/>
+      <rect x="0" y="2" width="6" height="6" fill="#ff6b9d"/>
+      <rect x="22" y="2" width="6" height="6" fill="#ff6b9d"/>
+      <rect x="6" y="8" width="4" height="4" fill="#1a0800"/>
+      <rect x="18" y="8" width="4" height="4" fill="#1a0800"/>
+      <rect x="8" y="6" width="2" height="2" fill="#fff"/>
+      <rect x="20" y="6" width="2" height="2" fill="#fff"/>
+      <rect x="8" y="14" width="6" height="4" fill="#ff9ec4"/>
+      <rect x="14" y="14" width="6" height="4" fill="#ff9ec4"/>
+    </svg>
+  </div>
+  <div class="header-eye">@MY_VISION_ART_DESIGN · España 🇪🇸</div>
+  <div class="header-title"><span class="s1">APP IA </span><span class="s2">SOLAR PRO</span></div>
+  <div class="header-sub">Calculadora · Cables · Presupuesto · Normativa</div>
+  <div class="header-team">
+    <div class="team-dot"></div>
+    <span style="color:var(--sol2);font-weight:700">Rafa btt</span>
+    <span style="color:rgba(255,255,255,.3)">&</span>
+    <span style="color:var(--cielo2);font-weight:700">Claudinha</span>
+    <span style="color:rgba(255,255,255,.3)">·</span>
+    <span style="color:rgba(255,255,255,.5)">My Vision Art Design</span>
+  </div>
+  <div class="header-drip"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('calc',this)">⚡ FV</button>
+  <button class="tab" onclick="showTab('cables',this)">🔌 Cables</button>
+  <button class="tab" onclick="showTab('material',this)">🔧 Mat.</button>
+  <button class="tab" onclick="showTab('personal',this)">👷 MO</button>
+  <button class="tab" onclick="showTab('presup',this)">💶 Presup.</button>
+  <button class="tab" onclick="showTab('normas',this)">📚 Normas</button>
+  <button class="tab" onclick="showTab('quienes',this)">👤 Nosotros</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ══ FV ══ -->
+  <div id="pane-calc" class="pane active">
+    <span class="sec-eye">Ingeniero Solar</span>
+    <div class="sec-title">Dimensiona tu <span>sistema FV</span></div>
+
+    <div class="mode-btns">
+      <button class="mode-btn active" id="btn-ciudad" onclick="setModo('ciudad')">🏙️ Ciudad</button>
+      <button class="mode-btn" id="btn-custom" onclick="setModo('custom')">📍 GPS</button>
+    </div>
+
+    <div id="zona-ciudad">
+      <span class="inp-label">Provincia</span>
+      <div class="city-grid" id="city-grid"></div>
+    </div>
+
+    <div id="zona-custom" class="hidden">
+      <div style="background:rgba(27,108,168,.08);border:1px solid rgba(27,108,168,.2);border-radius:12px;padding:13px;margin-bottom:12px;">
+        <span style="font-size:.52rem;color:var(--cielo2);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:9px;">📍 COORDENADAS</span>
+        <div class="grid-2" style="margin-bottom:7px;">
+          <div><span class="inp-label">Latitud</span><input class="inp" id="inp-lat" type="number" placeholder="36.7213"></div>
+          <div><span class="inp-label">Longitud</span><input class="inp" id="inp-lon" type="number" placeholder="-4.4214"></div>
+        </div>
+        <input class="inp" id="inp-nom" type="text" placeholder="Nombre del lugar (ej: Marbella)">
+        <div style="font-size:.6rem;color:rgba(255,255,255,.28);">💡 Máxima precisión → <span style="color:var(--cielo2)">pvgis.eu</span></div>
+      </div>
+    </div>
+
+    <div class="info-bar" id="info-bar">
+      <span>📍 <strong style="color:var(--cielo2)" id="info-ciudad">Málaga</strong></span>
+      <span>☀️ <strong style="color:var(--sol2)" id="info-hsp">5.82</strong> HSP</span>
+      <span>⚙️ η=<strong style="color:var(--sol2)">75%</strong></span>
+      <span>📐 <strong style="color:var(--sol2)">450W</strong></span>
+    </div>
+
+    <span class="inp-label">⚡ Consumo diario (kWh/día)</span>
+    <input class="inp" id="inp-consumo" type="number" placeholder="Ej: 10">
+    <div style="font-size:.52rem;color:rgba(255,255,255,.18);margin-bottom:12px;">P = Consumo×1000 / (HSP×η) → Paneles = ceil(P/450W)</div>
+
+    <button class="btn-main" id="btn-calcular" onclick="calcular()">⚡ CALCULAR + PROPUESTA IA</button>
+
+    <div id="resultado" class="hidden">
+      <div class="results-grid" id="results-grid"></div>
+      <div class="eco-grid" id="eco-grid"></div>
+      <div class="ia-box">
+        <div class="ia-bar"></div>
+        <div class="ia-label">🤖 PROPUESTA TÉCNICA IA</div>
+        <div class="ia-text" id="ia-text">Calculando...</div>
+        <div style="margin-top:10px;font-size:.52rem;color:rgba(255,255,255,.2);display:flex;justify-content:space-between;">
+          <span>⚡ My Vision Art Design</span><span style="color:var(--sol2)">Rafa btt & Claudinha · 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CABLES ══ -->
+  <div id="pane-cables" class="pane">
+    <span class="sec-eye">REBT ITC-BT-19</span>
+    <div class="sec-title">Calculador de <span>Cables</span></div>
+    <div class="card card-sol">
+      <div class="mode-btns">
+        <button class="mode-btn active" id="btn-cc" onclick="setTipoCable('CC')">☀️ CC — Paneles→Inversor</button>
+        <button class="mode-btn" id="btn-ac" onclick="setTipoCable('AC')">⚡ AC — Inversor→Red</button>
+      </div>
+      <div class="grid-2">
+        <div><span class="inp-label">Potencia (W)</span><input class="inp" id="c-pot" type="number" placeholder="1800"></div>
+        <div><span class="inp-label">Voltaje (V)</span><input class="inp" id="c-volt" type="number" value="200"></div>
+        <div><span class="inp-label">Longitud (m)</span><input class="inp" id="c-long" type="number" placeholder="15"></div>
+        <div><span class="inp-label">Caída máx (%)</span>
+          <select class="select" id="c-perd">
+            <option value="1.5">1.5% — CC REBT</option>
+            <option value="3">3% — AC REBT</option>
+            <option value="1">1% — Premium</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-main" style="margin-top:12px;margin-bottom:0" onclick="calcCable()">🔌 CALCULAR SECCIÓN</button>
+    </div>
+
+    <div id="cable-result" class="hidden">
+      <div class="card card-verde">
+        <span class="sec-eye" style="color:var(--verde)">✅ RESULTADO</span>
+        <div class="cable-grid" id="cable-grid"></div>
+        <div class="cable-result">
+          <div style="font-size:.65rem;color:var(--verde);font-weight:700;margin-bottom:5px;">🔌 Cable recomendado (UNE)</div>
+          <div class="cable-name" id="cable-nombre"></div>
+          <div class="cable-price"><span id="cable-precio-ml"></span><span id="cable-total" style="color:var(--sol2);font-weight:700"></span></div>
+        </div>
+        <div id="cable-warning" class="warning hidden">⚠️ Caída supera el máximo REBT. Aumenta sección o reduce longitud.</div>
+        <button class="btn-sec" onclick="addCableToMat()">➕ AÑADIR AL PRESUPUESTO</button>
+      </div>
+    </div>
+
+    <div class="card card-cielo">
+      <span class="sec-eye" style="color:var(--cielo2)">📋 PRECIOS CABLES ESPAÑA 2026</span>
+      <div id="tabla-cables"></div>
+    </div>
+  </div>
+
+  <!-- ══ MATERIAL ══ -->
+  <div id="pane-material" class="pane">
+    <span class="sec-eye">Precios España 2026</span>
+    <div class="sec-title">Lista de <span>Material</span></div>
+    <div id="selected-mats" class="hidden card card-verde">
+      <span class="sec-eye" style="color:var(--verde)">🛒 SELECCIONADO</span>
+      <div id="mats-list"></div>
+      <div class="subtotal"><span style="font-size:.8rem;font-weight:700">SUBTOTAL</span><span id="mat-subtotal" style="color:var(--sol2);font-family:Georgia,serif;font-size:1rem"></span></div>
+    </div>
+    <div id="catalogo-mat"></div>
+  </div>
+
+  <!-- ══ PERSONAL ══ -->
+  <div id="pane-personal" class="pane">
+    <span class="sec-eye">Tarifas España 2026</span>
+    <div class="sec-title">Personal y <span>Mano de Obra</span></div>
+    <div id="selected-works" class="hidden card card-cielo">
+      <span class="sec-eye" style="color:var(--cielo2)">👷 EQUIPO</span>
+      <div id="works-list"></div>
+      <div class="subtotal"><span style="font-size:.8rem;font-weight:700">SUBTOTAL MO</span><span id="work-subtotal" style="color:var(--cielo2);font-family:Georgia,serif;font-size:1rem"></span></div>
+    </div>
+    <div class="card card-purp">
+      <span class="sec-eye" style="color:var(--purp)">📋 GESTIÓN Y TRÁMITES</span>
+      <div id="gestion-list"></div>
+      <div id="gest-subtotal-row" class="subtotal hidden"><span style="font-size:.8rem;font-weight:700">SUBTOTAL GESTIÓN</span><span id="gest-subtotal" style="color:var(--purp);font-family:Georgia,serif;font-size:1rem"></span></div>
+    </div>
+    <div id="catalogo-mo"></div>
+  </div>
+
+  <!-- ══ PRESUPUESTO ══ -->
+  <div id="pane-presup" class="pane">
+    <span class="sec-eye">IVA · Margen · Desglose</span>
+    <div class="sec-title">Presupuesto <span>Final</span></div>
+    <div class="card card-sol">
+      <span class="sec-eye" style="color:var(--sol2)">👤 DATOS CLIENTE</span>
+      <input class="inp" id="p-cliente" type="text" placeholder="Nombre del cliente">
+      <input class="inp" id="p-dir" type="text" placeholder="Dirección instalación">
+    </div>
+    <div class="card card-purp">
+      <span class="sec-eye" style="color:var(--purp)">⚙️ AJUSTES FISCALES</span>
+      <div class="grid-2">
+        <div><span class="inp-label">Margen (%)</span>
+          <select class="select" id="p-margen" onchange="updatePresup()">
+            <option value="10">10%</option><option value="15">15%</option>
+            <option value="20" selected>20%</option><option value="25">25%</option>
+            <option value="30">30%</option><option value="35">35%</option><option value="40">40%</option>
+          </select>
+        </div>
+        <div><span class="inp-label">IVA (%)</span>
+          <select class="select" id="p-iva" onchange="updatePresup()">
+            <option value="21">21% General</option>
+            <option value="10">10% Reducido</option>
+            <option value="0">0% Exento</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card card-verde">
+      <span class="sec-eye" style="color:var(--verde)">💶 DESGLOSE COMPLETO</span>
+      <div id="desglose-list"></div>
+      <div class="total-final">
+        <span style="font-size:.88rem;font-weight:700">💶 TOTAL</span>
+        <span id="total-final" style="font-family:Georgia,serif;font-size:1.6rem;color:var(--sol2);font-weight:700"></span>
+      </div>
+    </div>
+    <div class="resumen-box">
+      <div class="resumen-bar"></div>
+      <div style="font-family:Georgia,serif;font-size:1.2rem;margin-bottom:3px"><span style="color:var(--sol2)">My Vision Art Design</span></div>
+      <div id="resumen-cliente" style="font-size:.7rem;color:rgba(255,255,255,.45);margin-bottom:3px"></div>
+      <div id="resumen-dir" style="font-size:.65rem;color:rgba(255,255,255,.35);margin-bottom:12px"></div>
+      <div class="resumen-grid" id="resumen-grid"></div>
+      <div class="total-box">
+        <div style="font-size:.55rem;color:rgba(255,255,255,.38);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px">TOTAL CON IVA</div>
+        <div id="resumen-total" style="font-family:Georgia,serif;font-size:1.9rem;color:var(--sol2);font-weight:700"></div>
+      </div>
+      <div style="margin-top:12px;font-size:.58rem;color:rgba(255,255,255,.28);text-align:center;letter-spacing:2px">📸 @MY_VISION_ART_DESIGN · Rafa btt & Claudinha · 2026</div>
+    </div>
+  </div>
+
+  <!-- ══ NORMAS ══ -->
+  <div id="pane-normas" class="pane">
+    <span class="sec-eye">Base de datos técnica</span>
+    <div class="sec-title">Normativa <span>España</span></div>
+    <div id="normas-list"></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center;">
+      <div style="font-size:.58rem;color:var(--purp);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">📁 BASE DE DATOS VIVA</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.7">Cada PDF técnico se integra aquí.<br>Columna vertebral técnica de My Vision Art Design.</div>
+    </div>
+  </div>
+
+  <!-- ══ QUIÉNES ══ -->
+  <div id="pane-quienes" class="pane">
+    <span class="sec-eye">My Vision Art Design</span>
+    <div class="sec-title">Quiénes <span>Somos</span></div>
+
+    <div class="afri-card">
+      <div class="char-bounce" style="flex-shrink:0">
+        <svg width="56" height="80" viewBox="0 0 28 40" style="image-rendering:pixelated">
+          <rect x="4" y="0" width="6" height="3" fill="#2a1a0a"/>
+          <rect x="3" y="3" width="8" height="6" fill="#c8814a"/>
+          <rect x="3" y="6" width="2" height="2" fill="#1a0800"/>
+          <rect x="8" y="6" width="2" height="2" fill="#1a0800"/>
+          <rect x="3" y="9" width="8" height="5" fill="#8B1A1A"/>
+          <rect x="4" y="14" width="2" height="4" fill="#444"/>
+          <rect x="8" y="14" width="2" height="4" fill="#444"/>
+          <rect x="15" y="9" width="9" height="6" fill="#ff9ec4"/>
+          <rect x="13" y="7" width="3" height="3" fill="#ff6b9d"/>
+          <rect x="22" y="7" width="3" height="3" fill="#ff6b9d"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-family:Georgia,serif;font-size:1rem;color:var(--sol2);margin-bottom:4px">¡Hola! Soy Áfri 👋</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.7">Bienvenido a la app de<br><strong style="color:#fff">My Vision Art Design</strong> — Energías Renovables con IA</div>
+      </div>
+    </div>
+
+    <div style="border-radius:16px;overflow:hidden;margin-bottom:16px;border:2px solid rgba(255,140,0,.3)">
+      <img src="https://i.ibb.co/Y7423gKT/image.jpg" alt="Energías Renovables con IA" style="width:100%;display:block">
+    </div>
+
+    <div class="firma-box">
+      <div class="firma-bar"></div>
+      <div style="font-size:.58rem;color:rgba(255,255,255,.3);letter-spacing:4px;text-transform:uppercase;margin-bottom:10px">Creadores</div>
+      <div style="font-family:Georgia,serif;font-size:clamp(1.5rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:16px">
+        <span style="color:var(--sol2)">Rafa btt</span><br>
+        <span style="color:rgba(255,255,255,.25);font-size:.7em">&</span><br>
+        <span style="color:var(--cielo2)">Claudinha</span>
+      </div>
+      <div style="width:50px;height:2px;background:linear-gradient(90deg,var(--sol),var(--cielo));margin:0 auto 16px;border-radius:2px"></div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.45);line-height:2.2;letter-spacing:2px;text-transform:uppercase">
+        My Vision<br><strong style="color:var(--sol2)">Art Design</strong><br><span style="color:var(--cielo2)">2026</span>
+      </div>
+    </div>
+
+    <div style="font-size:.52rem;color:var(--sol);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px">Asistentes de ayuda al cliente</div>
+    <div class="equipo-grid" id="equipo-grid"></div>
+
+    <div class="contacto-box">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sol),var(--cielo2))"></div>
+      <div style="font-size:.52rem;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px">Contacto</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.5);line-height:2.2">
+        📸 <a href="https://www.instagram.com/my_vision_art_design" target="_blank" style="color:var(--cielo2);text-decoration:none">@MY_VISION_ART_DESIGN</a><br>
+        📍 España<br>
+        ⚡ Energías Renovables con IA<br>
+        <span style="color:rgba(255,255,255,.25);font-size:.62rem">— Datos de contacto próximamente —</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- HELP BTN -->
+<button class="help-btn" id="help-btn" onclick="showCurrentHelper()"></button>
+
+<!-- HELPER POPUP -->
+<div class="helper-overlay hidden" id="helper-overlay" onclick="closeHelper()">
+  <div class="helper-popup" onclick="event.stopPropagation()">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0" id="helper-bar"></div>
+    <div class="helper-header">
+      <div id="helper-char" style="flex-shrink:0"></div>
+      <div>
+        <div id="helper-name" style="font-size:.9rem;font-weight:700;letter-spacing:2px"></div>
+        <div style="font-size:.62rem;color:rgba(255,255,255,.4);letter-spacing:1px">Asistente Solar ⭐</div>
+      </div>
+    </div>
+    <div class="helper-msg" id="helper-msg"></div>
+    <div class="helper-dots" id="helper-dots"></div>
+    <button class="helper-close" onclick="closeHelper()">✕</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-text">📸 @MY_VISION_ART_DESIGN · <span style="color:var(--sol2)">Rafa btt</span> & <span style="color:var(--cielo2)">Claudinha</span> · My Vision Art Design · España 2026</div>
+</div>
+
+<script>
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+const CITIES={Málaga:5.82,Sevilla:5.98,Madrid:4.80,Barcelona:4.60,Valencia:5.20,Bilbao:3.80,Almería:6.02,Granada:5.93};
+const CHARS={
+  afri:{name:"Áfri",color:"#FF8C00",msgs:["¡Hola! Soy Áfri 👋","¿Te ayudo con tu sistema solar?","¡Pulsa calcular y dimensiono todo!","¡My Vision Art Design! 🌟"]},
+  gafas:{name:"Leo",color:"#4A9FD4",msgs:["¡Yo calculo secciones!","H1Z2Z2-K CC · RZ1-K AC","Caída máx 1.5% CC · 3% AC","¡Déjame ver esos cables! 🔌"]},
+  gordo:{name:"Toni",color:"#FFB347",msgs:["¡Ahorro máximo!","6-7 años recuperas la inversión","€400 ahorro al año 💚","¡Presupuesto listo! 👍"]},
+  verde:{name:"Mia",color:"#2ecc71",msgs:["Normativa REBT·CTE·RD244","¿Necesitas contactar?","¡Revisa la ITC-BT-40! 📋","¡Aquí para ayudarte! 📱"]},
+  axo:{name:"Axolito",color:"#ff9ec4",msgs:["¡Soy el ajolote mágico! ✨","¡Trae suerte en proyectos!","¡Energía solar para todos!","¡Áfri me lleva a todas partes!"]},
+};
+const HELPERS={calc:"afri",cables:"gafas",material:"gafas",personal:"gordo",presup:"gordo",normas:"verde",quienes:"afri"};
+const PRECIOS_MAT={"Panel Canadian Solar 450W":{p:165,u:"ud"},"Inversor Huawei 2kW":{p:950,u:"ud"},"Inversor Huawei 3kW":{p:1100,u:"ud"},"Estructura inclinado":{p:45,u:"panel"},"Estructura plano":{p:65,u:"panel"},"Conector MC4 (par)":{p:3.5,u:"ud"},"Disyuntor CC 16A":{p:45,u:"ud"},"Fusible CC 15A":{p:8.5,u:"ud"},"Protector sobretensión":{p:85,u:"ud"},"IGA 25A AC":{p:35,u:"ud"},"Canaleta PVC 40x25":{p:3.2,u:"ml"},"Caja IP65":{p:18,u:"ud"}};
+const PRECIOS_MO={"Oficial 1ª electricista":{t:28,d:"Instalación"},"Oficial 2ª electricista":{t:22,d:"Ayudante"},"Técnico solar":{t:35,d:"Supervisión"},"Ingeniero/Proyectista":{t:65,d:"Proyecto"}};
+const PRECIOS_G={"Tramitación ayuntamiento":{p:180},"Registro REE/RIPRE":{p:120},"Boletín eléctrico":{p:95},"Notificación distribuidora":{p:85},"Desplazamiento":{p:45}};
+
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let currentCity="Málaga", currentTab="calc", modoUbi="ciudad", tipoCable="CC";
+let mats=[], works=[], gests=[];
+let helperInterval=null, helperMsgIdx=0, currentHelper="afri";
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function init(){
+  buildCityGrid();
+  buildTablaCables();
+  buildCatalogMat();
+  buildCatalogMO();
+  buildNormas();
+  buildEquipo();
+  updateInfoBar();
+  updateHelpBtn();
+  updatePresup();
+}
+
+// ═══════════════════════════════
+// TABS
+// ═══════════════════════════════
+function showTab(id, btn){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  btn.classList.add('active');
+  currentTab=id;
+  updateHelpBtn();
+}
+
+// ═══════════════════════════════
+// CITIES
+// ═══════════════════════════════
+function buildCityGrid(){
+  const g=document.getElementById('city-grid');
+  Object.entries(CITIES).forEach(([c,h])=>{
+    const b=document.createElement('button');
+    b.className='city-btn'+(c==='Málaga'?' active':'');
+    b.innerHTML=`<div>${c}</div><div class="city-hsp">${h}h</div>`;
+    b.onclick=()=>{
+      document.querySelectorAll('.city-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); currentCity=c; updateInfoBar();
+    };
+    g.appendChild(b);
+  });
+}
+
+function setModo(m){
+  modoUbi=m;
+  document.getElementById('btn-ciudad').classList.toggle('active',m==='ciudad');
+  document.getElementById('btn-custom').classList.toggle('active',m==='custom');
+  document.getElementById('zona-ciudad').classList.toggle('hidden',m!=='ciudad');
+  document.getElementById('zona-custom').classList.toggle('hidden',m!=='custom');
+  updateInfoBar();
+}
+
+function getHSP(){
+  if(modoUbi==='custom'){
+    const lat=parseFloat(document.getElementById('inp-lat').value);
+    return lat>0?Math.max(3.5,(6.5-(lat-36)*0.12)).toFixed(1):5.0;
+  }
+  return CITIES[currentCity];
+}
+
+function getUbicacion(){
+  if(modoUbi==='custom'){
+    const nom=document.getElementById('inp-nom').value;
+    const lat=document.getElementById('inp-lat').value;
+    const lon=document.getElementById('inp-lon').value;
+    return nom||`${lat},${lon}`;
+  }
+  return currentCity;
+}
+
+function updateInfoBar(){
+  document.getElementById('info-ciudad').textContent=getUbicacion()||'Málaga';
+  document.getElementById('info-hsp').textContent=getHSP();
+}
+
+// ═══════════════════════════════
+// CALCULAR FV
+// ═══════════════════════════════
+async function calcular(){
+  const consumo=parseFloat(document.getElementById('inp-consumo').value);
+  if(!consumo) return;
+  const btn=document.getElementById('btn-calcular');
+  btn.textContent='🤖 GENERANDO PROPUESTA...'; btn.disabled=true;
+  updateInfoBar();
+  const hsp=parseFloat(getHSP()), eta=0.75;
+  const pan=Math.ceil((consumo*1000)/(hsp*eta*450));
+  const pot=pan*450;
+  const eDia=(pot*hsp*eta/1000).toFixed(2);
+  const eAnio=Math.round(eDia*365);
+  const inv=Math.round(pan*180+950+250);
+  const ahorro=Math.round(eAnio*0.18);
+  const roi=(inv/ahorro).toFixed(1);
+
+  const rg=document.getElementById('results-grid');
+  rg.innerHTML=[["Paneles",pan,"× 450W","#FFB347"],["Potencia",pot+"W","pico","#4A9FD4"],["Energía/día",eDia+" kWh","est.","#2ecc71"],["Energía/año",eAnio+" kWh","anual","#a47fd4"]].map(([l,v,s,c])=>`
+    <div class="result-box"><div class="result-bar" style="background:${c}"></div>
+    <div class="result-val" style="color:${c}">${v}</div>
+    <div class="result-label">${l}</div><div class="result-sub">${s}</div></div>`).join('');
+
+  const eg=document.getElementById('eco-grid');
+  eg.innerHTML=[["💶","€"+inv,"Inversión","rgba(255,140,0,.13)","#FFB347"],["💚","€"+ahorro,"Ahorro/año","rgba(46,204,113,.13)","#2ecc71"],["📈",roi+" años","ROI","rgba(74,159,212,.13)","#4A9FD4"]].map(([ic,v,l,bg,c])=>`
+    <div class="eco-box" style="background:${bg};border:1px solid ${c}33">
+    <div class="eco-val" style="color:${c}">${v}</div>
+    <div class="eco-label">${l}</div></div>`).join('');
+
+  document.getElementById('resultado').classList.remove('hidden');
+  document.getElementById('ia-text').textContent='Generando propuesta con IA...';
+
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:`Ingeniero solar España. Propuesta técnica concisa: Ciudad:${getUbicacion()}(HSP:${hsp}), Consumo:${consumo}kWh/día, Sistema:${pan}×450W=${pot}W, Producción:${eDia}kWh/día/${eAnio}kWh/año, Inversión:€${inv}, Ahorro:€${ahorro}/año, ROI:${roi}años. Resumen, componentes, normativa REBT/CTE. Máx 180 palabras. Español técnico.`}]})});
+    const d=await res.json();
+    document.getElementById('ia-text').textContent=d.content?.[0]?.text||"Error generando propuesta.";
+  }catch(e){
+    document.getElementById('ia-text').textContent="Sistema calculado correctamente.\nPaneles: "+pan+" × 450W | Potencia: "+pot+"W\nProducción: "+eDia+" kWh/día | "+eAnio+" kWh/año\nInversión: €"+inv+" | Ahorro: €"+ahorro+"/año | ROI: "+roi+" años\nNormativa: REBT ITC-BT-40 · RD 244/2019 · CTE HE-5";
+  }
+  btn.textContent='⚡ CALCULAR + PROPUESTA IA'; btn.disabled=false;
+}
+
+// ═══════════════════════════════
+// CABLES
+// ═══════════════════════════════
+function setTipoCable(t){
+  tipoCable=t;
+  document.getElementById('btn-cc').classList.toggle('active',t==='CC');
+  document.getElementById('btn-ac').classList.toggle('active',t==='AC');
+  document.getElementById('c-volt').value=t==='CC'?'200':'230';
+  const s=document.getElementById('c-perd');
+  s.value=t==='CC'?'1.5':'3';
+}
+
+function calcSeccion(I,L,V,p){
+  const s=(2*L*I)/(56*V*(p/100));
+  return [1.5,2.5,4,6,10,16,25].find(x=>x>=s)||25;
+}
+
+function calcCable(){
+  const P=parseFloat(document.getElementById('c-pot').value);
+  const V=parseFloat(document.getElementById('c-volt').value);
+  const L=parseFloat(document.getElementById('c-long').value);
+  const pd=parseFloat(document.getElementById('c-perd').value);
+  if(!P||!L) return;
+  const I=P/V;
+  const sec=calcSeccion(I,L,V,pd);
+  const caida=((2*L*I)/(56*sec*V)*100).toFixed(2);
+  const nombre=tipoCable==="CC"?`H1Z2Z2-K ${sec}mm²`:`RZ1-K ${sec}mm²`;
+  const pm={"1.5":1.20,"2.5":1.65,"4":1.80,"6":2.40,"10":3.80,"16":5.20}[String(sec)]||2.40;
+  const total=(pm*L).toFixed(2);
+  const ok=parseFloat(caida)<=pd;
+
+  const cg=document.getElementById('cable-grid');
+  cg.innerHTML=[["Intensidad",I.toFixed(2)+" A","#FFB347"],["Sección",sec+" mm²","#4A9FD4"],["Caída V",caida+"%",ok?"#2ecc71":"#e74c3c"],["Longitud",L+" m","#a47fd4"]].map(([l,v,c])=>`
+    <div class="cable-box"><div class="cable-val" style="color:${c}">${v}</div><div class="cable-label">${l}</div></div>`).join('');
+
+  document.getElementById('cable-nombre').textContent=nombre;
+  document.getElementById('cable-precio-ml').textContent=`€${pm}/ml × ${L}m`;
+  document.getElementById('cable-total').textContent=`€${total}`;
+  document.getElementById('cable-warning').classList.toggle('hidden',ok);
+  document.getElementById('cable-result').classList.remove('hidden');
+
+  document.getElementById('cable-result')._data={nombre,total:parseFloat(total),L};
+}
+
+function buildTablaCables(){
+  const t=document.getElementById('tabla-cables');
+  [["H1Z2Z2-K 4mm²","CC estándar","1.80€/ml"],["H1Z2Z2-K 6mm²","CC recomendado REBT","2.40€/ml"],["H1Z2Z2-K 10mm²","CC largas distancias","3.80€/ml"],["RZ1-K 6mm²","AC inversor→cuadro","1.90€/ml"],["RZ1-K 10mm²","AC potencias altas","2.80€/ml"],["RZ1-K 16mm²","AC conexión red","4.20€/ml"]].forEach(([n,u,p])=>{
+    t.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div><div style="font-size:.76rem;color:#fff;font-weight:600">${n}</div><div style="font-size:.6rem;color:rgba(255,255,255,.3)">${u}</div></div>
+      <div style="color:#FFB347;font-weight:700;font-size:.82rem">${p}</div></div>`;
+  });
+}
+
+function addCableToMat(){
+  const d=document.getElementById('cable-result')._data;
+  if(!d) return;
+  mats=mats.filter(m=>!m.n.startsWith('Cable'));
+  mats.push({n:`Cable ${d.nombre} (${d.L}m)`,p:d.total,u:'tramo',q:1});
+  renderMats();
+  document.querySelectorAll('.tab')[2].click();
+}
+
+// ═══════════════════════════════
+// MATERIAL
+// ═══════════════════════════════
+function buildCatalogMat(){
+  const c=document.getElementById('catalogo-mat');
+  Object.entries(PRECIOS_MAT).forEach(([n,d])=>{
+    const el=document.createElement('div');
+    el.className='mat-item';
+    el.innerHTML=`<div><div class="mat-name">${n}</div><div class="mat-price">€${d.p}/${d.u}</div></div><div class="mat-add">+ Añadir</div>`;
+    el.onclick=()=>{
+      const ex=mats.find(m=>m.n===n);
+      if(ex) ex.q++;else mats.push({n,p:d.p,u:d.u,q:1});
+      renderMats();
+    };
+    c.appendChild(el);
+  });
+}
+
+function renderMats(){
+  const list=document.getElementById('mats-list');
+  const sel=document.getElementById('selected-mats');
+  if(mats.length===0){sel.classList.add('hidden');return;}
+  sel.classList.remove('hidden');
+  let total=0;
+  list.innerHTML=mats.map(m=>{
+    total+=m.p*m.q;
+    return `<div class="selected-item">
+      <div style="flex:1"><div style="font-size:.73rem;color:#fff">${m.n}</div>
+      <div style="font-size:.6rem;color:rgba(255,255,255,.32)">€${m.p}/${m.u} × ${m.q} = <span style="color:#FFB347;font-weight:700">€${(m.p*m.q).toFixed(2)}</span></div></div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <button class="qty-btn qty-minus" onclick="updMat('${m.n}',-1)">−</button>
+        <span class="qty-val">${m.q}</span>
+        <button class="qty-btn qty-plus" onclick="updMat('${m.n}',1)">+</button>
+      </div></div>`;
+  }).join('');
+  document.getElementById('mat-subtotal').textContent=`€${total.toFixed(2)}`;
+  updatePresup();
+}
+
+function updMat(n,delta){
+  const m=mats.find(x=>x.n===n);
+  if(!m) return;
+  m.q+=delta;
+  if(m.q<=0) mats=mats.filter(x=>x.n!==n);
+  renderMats();
+}
+
+// ═══════════════════════════════
+// PERSONAL
+// ═══════════════════════════════
+function buildCatalogMO(){
+  const g=document.getElementById('gestion-list');
+  Object.entries(PRECIOS_G).forEach(([n,d])=>{
+    const el=document.createElement('div');
+    el.className='gest-item';
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:9px">
+      <div class="gest-check" id="gck-${n.replace(/ /g,'_')}" style="border:1px solid rgba(164,127,212,.44)"></div>
+      <span style="font-size:.76rem;color:#fff">${n}</span></div>
+      <span style="color:var(--purp);font-weight:700;font-size:.8rem">€${d.p}</span>`;
+    el.onclick=()=>{
+      const ex=gests.find(g=>g.n===n);
+      if(ex){gests=gests.filter(g=>g.n!==n);document.getElementById('gck-'+n.replace(/ /g,'_')).style.background='';}
+      else{gests.push({n,p:d.p});document.getElementById('gck-'+n.replace(/ /g,'_')).style.background='var(--purp)';}
+      renderGests(); updatePresup();
+    };
+    g.appendChild(el);
+  });
+
+  const c=document.getElementById('catalogo-mo');
+  Object.entries(PRECIOS_MO).forEach(([n,d])=>{
+    const el=document.createElement('div');
+    el.className='work-item';
+    el.innerHTML=`<div><div class="mat-name">${n}</div><div class="mat-price">${d.d} · €${d.t}/h</div></div>
+      <div style="background:rgba(27,108,168,.14);border:1px solid rgba(27,108,168,.33);border-radius:20px;padding:4px 11px;color:#4A9FD4;font-size:.68rem;font-weight:700">+ Añadir</div>`;
+    el.onclick=()=>{
+      const ex=works.find(w=>w.n===n);
+      if(ex) ex.h++;else works.push({n,t:d.t,h:8});
+      renderWorks();
+    };
+    c.appendChild(el);
+  });
+}
+
+function renderWorks(){
+  const list=document.getElementById('works-list');
+  const sel=document.getElementById('selected-works');
+  if(works.length===0){sel.classList.add('hidden');return;}
+  sel.classList.remove('hidden');
+  let total=0;
+  list.innerHTML=works.map(w=>{
+    total+=w.t*w.h;
+    return `<div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <div style="font-size:.76rem;color:#fff;font-weight:600">${w.n}</div>
+        <div style="color:#4A9FD4;font-weight:700">€${(w.t*w.h).toFixed(0)}</div></div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:.62rem;color:rgba(255,255,255,.32)">€${w.t}/h ×</span>
+        <button class="qty-btn qty-minus" onclick="updWork('${w.n}',-1)">−</button>
+        <span class="qty-val">${w.h}h</span>
+        <button class="qty-btn qty-plus" style="background:rgba(27,108,168,.18);color:#4A9FD4" onclick="updWork('${w.n}',1)">+</button>
+      </div></div>`;
+  }).join('');
+  document.getElementById('work-subtotal').textContent=`€${total.toFixed(2)}`;
+  updatePresup();
+}
+
+function updWork(n,delta){
+  const w=works.find(x=>x.n===n);
+  if(!w) return;
+  w.h+=delta;
+  if(w.h<=0) works=works.filter(x=>x.n!==n);
+  renderWorks();
+}
+
+function renderGests(){
+  const total=gests.reduce((s,g)=>s+g.p,0);
+  const row=document.getElementById('gest-subtotal-row');
+  if(gests.length>0){row.classList.remove('hidden');document.getElementById('gest-subtotal').textContent=`€${total.toFixed(2)}`;}
+  else row.classList.add('hidden');
+}
+
+// ═══════════════════════════════
+// PRESUPUESTO
+// ═══════════════════════════════
+function updatePresup(){
+  const tMat=mats.reduce((s,m)=>s+m.p*m.q,0);
+  const tWork=works.reduce((s,w)=>s+w.t*w.h,0);
+  const tGest=gests.reduce((s,g)=>s+g.p,0);
+  const sub=tMat+tWork+tGest;
+  const margen=parseFloat(document.getElementById('p-margen')?.value||20);
+  const iva=parseFloat(document.getElementById('p-iva')?.value||21);
+  const ben=sub*(margen/100);
+  const base=sub+ben;
+  const ivaAmt=base*(iva/100);
+  const total=base+ivaAmt;
+
+  const dl=document.getElementById('desglose-list');
+  if(dl) dl.innerHTML=[["🔧 Material",tMat,"#FFB347"],["👷 Mano de obra",tWork,"#4A9FD4"],["📋 Gestión",tGest,"#a47fd4"],["📊 Subtotal",sub,"#fff"],["📈 Beneficio ("+margen+"%)",ben,"#2ecc71"],["🏛️ Base imponible",base,"#fff"],["📑 IVA ("+iva+"%)",ivaAmt,"#FFB347"]].map(([l,v,c])=>`
+    <div class="desglose-item"><span style="color:rgba(255,255,255,.52)">${l}</span><span style="color:${c};font-weight:700">€${v.toFixed(2)}</span></div>`).join('');
+
+  const tf=document.getElementById('total-final');
+  if(tf) tf.textContent=`€${total.toFixed(2)}`;
+
+  const rg=document.getElementById('resumen-grid');
+  if(rg) rg.innerHTML=[["Material","€"+tMat.toFixed(0),"#FFB347"],["Mano obra","€"+tWork.toFixed(0),"#4A9FD4"],["Gestión","€"+tGest.toFixed(0),"#a47fd4"],["IVA "+iva+"%","€"+ivaAmt.toFixed(0),"#2ecc71"]].map(([l,v,c])=>`
+    <div class="resumen-item"><div style="font-family:Georgia,serif;font-size:1rem;color:${c}">${v}</div>
+    <div style="font-size:.52rem;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:1px;margin-top:3px">${l}</div></div>`).join('');
+
+  const rt=document.getElementById('resumen-total');
+  if(rt) rt.textContent=`€${total.toFixed(2)}`;
+
+  const cl=document.getElementById('p-cliente');
+  const dr=document.getElementById('p-dir');
+  const rc=document.getElementById('resumen-cliente');
+  const rd=document.getElementById('resumen-dir');
+  if(cl&&rc) rc.textContent=cl.value?`Cliente: ${cl.value}`:'';
+  if(dr&&rd) rd.textContent=dr.value?`📍 ${dr.value}`:'';
+}
+
+document.addEventListener('input',e=>{
+  if(['p-cliente','p-dir','p-margen','p-iva'].includes(e.target.id)) updatePresup();
+});
+
+// ═══════════════════════════════
+// NORMATIVA
+// ═══════════════════════════════
+function buildNormas(){
+  const n=document.getElementById('normas-list');
+  [[`#e74c3c`,"⚖️","Real Decretos","Marco legal",[["RD 842/2002","REBT — Base toda instalación eléctrica"],["RD 244/2019","Autoconsumo — Compensación excedentes"],["RD 314/2006","CTE HE-5 — Edificios nuevos"],["RD 1110/2007","Medida — Contador bidireccional"]]],
+  [`#1B6CA8`,"📋","ITC-BT","Instrucciones Técnicas",[["ITC-BT-40","Instalaciones generadoras ⭐ CLAVE"],["ITC-BT-19","Cables y secciones mínimas"],["ITC-BT-15","Derivación individual RZ1-K(AS)"],["ITC-BT-18","Puesta a tierra equipotencial"]]],
+  [`#2ecc71`,"🔌","Normas UNE — Cables","AENOR",[["H1Z2Z2-K","CC paneles→inversor · 1000V DC · XLPE"],["RZ1-K (AS)","AC inversor→red · 0.6/1kV · libre halógenos"],["ES07Z1-K","Interior fijo · 450/750V"],["Secciones","1.5·2.5·4·6·10·16·25mm²"]]],
+  [`#FF8C00`,"☀️","HSP España","SunFields + PVGIS JRC Europa",[["Almería/Huelva","6.02 h/día — Zona I ⭐"],["Sevilla/Granada","5.93-5.98 h/día — Zona II"],["Málaga","5.82 h/día — Zona II"],["Madrid/Barcelona","4.60-4.80 h/día — Zona IV"]]]].forEach(([c,ic,t,s,items])=>{
+    n.innerHTML+=`<div class="norm-card" style="border:1px solid ${c}22">
+      <div class="norm-head" style="border-left:4px solid ${c}">
+        <span style="font-size:1.2rem">${ic}</span>
+        <div><div style="font-weight:700;color:${c};font-size:.86rem">${t}</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.28);letter-spacing:1px">${s}</div></div>
+      </div>
+      <div class="norm-body">${items.map(([k,v])=>`<div class="norm-row"><span class="norm-key" style="color:${c}">${k}</span><span class="norm-val">${v}</span></div>`).join('')}</div>
+    </div>`;
+  });
+}
+
+// ═══════════════════════════════
+// EQUIPO
+// ═══════════════════════════════
+const PIXEL_CHARS={
+  afri:`<svg width="38" height="54" viewBox="0 0 28 40" style="image-rendering:pixelated"><rect x="4" y="0" width="6" height="3" fill="#2a1a0a"/><rect x="3" y="3" width="8" height="6" fill="#c8814a"/><rect x="3" y="6" width="2" height="2" fill="#1a0800"/><rect x="8" y="6" width="2" height="2" fill="#1a0800"/><rect x="3" y="9" width="8" height="5" fill="#8B1A1A"/><rect x="4" y="14" width="2" height="4" fill="#444"/><rect x="8" y="14" width="2" height="4" fill="#444"/><rect x="15" y="9" width="9" height="6" fill="#ff9ec4"/><rect x="13" y="7" width="3" height="3" fill="#ff6b9d"/><rect x="22" y="7" width="3" height="3" fill="#ff6b9d"/></svg>`,
+  gafas:`<svg width="34" height="54" viewBox="0 0 26 40" style="image-rendering:pixelated"><rect x="3" y="0" width="6" height="3" fill="#1a0a00"/><rect x="2" y="3" width="8" height="6" fill="#d4956a"/><rect x="2" y="5" width="3" height="2" fill="#4A9FD4" opacity=".7"/><rect x="7" y="5" width="3" height="2" fill="#4A9FD4" opacity=".7"/><rect x="5" y="6" width="2" height="1" fill="#4A9FD4"/><rect x="2" y="9" width="8" height="5" fill="#1B6CA8"/><rect x="3" y="14" width="2" height="4" fill="#555"/><rect x="7" y="14" width="2" height="4" fill="#555"/><rect x="9" y="11" width="4" height="3" fill="#0d1117"/><rect x="10" y="12" width="2" height="1" fill="#4A9FD4"/></svg>`,
+  gordo:`<svg width="38" height="54" viewBox="0 0 28 40" style="image-rendering:pixelated"><rect x="4" y="0" width="7" height="3" fill="#4a2800"/><rect x="3" y="3" width="9" height="6" fill="#e8a87c"/><rect x="4" y="5" width="2" height="2" fill="#2a1400"/><rect x="8" y="5" width="2" height="2" fill="#2a1400"/><rect x="2" y="9" width="10" height="6" fill="#e8c020"/><rect x="4" y="15" width="2" height="4" fill="#555"/><rect x="8" y="15" width="2" height="4" fill="#555"/><rect x="13" y="11" width="6" height="3" fill="#e8a87c"/><rect x="16" y="8" width="3" height="4" fill="#e8a87c"/></svg>`,
+  verde:`<svg width="30" height="46" viewBox="0 0 22 38" style="image-rendering:pixelated"><rect x="3" y="0" width="5" height="2" fill="#1a0a00"/><rect x="2" y="2" width="7" height="5" fill="#8B5E3C"/><rect x="2" y="4" width="2" height="1" fill="#1a0800"/><rect x="6" y="4" width="2" height="1" fill="#1a0800"/><rect x="2" y="7" width="7" height="5" fill="#2ecc71"/><rect x="3" y="12" width="2" height="4" fill="#333"/><rect x="6" y="12" width="2" height="4" fill="#333"/><rect x="9" y="8" width="4" height="6" fill="#111"/><rect x="10" y="9" width="2" height="4" fill="#4A9FD4"/></svg>`,
+};
+
+function buildEquipo(){
+  const g=document.getElementById('equipo-grid');
+  [["afri","Áfri","Asistente & Imagen de marca","Divulgación 🌟","#FF8C00"],["gafas","Leo","Cálculos técnicos","Cables 🔌","#4A9FD4"],["gordo","Toni","Ahorro energético","Presupuestos 💶","#FFB347"],["verde","Mia","Contacto & Normas","Normativa 📋","#2ecc71"]].forEach(([id,name,role,desc,c])=>{
+    const el=document.createElement('div');
+    el.className='eq-card';
+    el.style.border=`1px solid ${c}22`;
+    el.innerHTML=`<div style="display:flex;justify-content:center;margin-bottom:8px;animation:bounce2 0.7s ease infinite alternate">${PIXEL_CHARS[id]||''}</div>
+      <div style="font-size:.78rem;font-weight:700;color:${c};margin-bottom:2px">${name}</div>
+      <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:3px">${role}</div>
+      <div style="font-size:.58rem;color:rgba(255,255,255,.3)">${desc}</div>`;
+    el.onclick=()=>showHelper(id);
+    g.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════
+// HELPER
+// ═══════════════════════════════
+function updateHelpBtn(){
+  const id=HELPERS[currentTab]||'afri';
+  const char=CHARS[id];
+  const btn=document.getElementById('help-btn');
+  btn.style.border=`2px solid ${char.color}`;
+  btn.style.boxShadow=`0 4px 20px ${char.color}44`;
+  btn.innerHTML=`${PIXEL_CHARS[id]||'?'}<div style="font-size:7px;color:${char.color};letter-spacing:1px;font-family:monospace">AYUDA</div>`;
+}
+
+function showCurrentHelper(){
+  showHelper(HELPERS[currentTab]||'afri');
+}
+
+function showHelper(id){
+  const char=CHARS[id];
+  if(!char) return;
+  currentHelper=id; helperMsgIdx=0;
+  document.getElementById('helper-bar').style.background=char.color;
+  document.getElementById('helper-name').style.color=char.color;
+  document.getElementById('helper-name').textContent=char.name;
+  document.getElementById('helper-char').innerHTML=PIXEL_CHARS[id]||'';
+  document.getElementById('helper-overlay').classList.remove('hidden');
+  updateHelperMsg();
+  if(helperInterval) clearInterval(helperInterval);
+  helperInterval=setInterval(()=>{helperMsgIdx=(helperMsgIdx+1)%char.msgs.length;updateHelperMsg();},2500);
+}
+
+function updateHelperMsg(){
+  const char=CHARS[currentHelper];
+  document.getElementById('helper-msg').textContent=char.msgs[helperMsgIdx];
+  const dots=document.getElementById('helper-dots');
+  dots.innerHTML=char.msgs.map((_,i)=>`<div class="helper-dot" style="background:${i===helperMsgIdx?char.color:'rgba(255,255,255,.2)'}"></div>`).join('');
+}
+
+function closeHelper(){
+  document.getElementById('helper-overlay').classList.add('hidden');
+  if(helperInterval){clearInterval(helperInterval);helperInterval=null;}
+}
+
+// ═══════════════════════════════
+// START
+// ═══════════════════════════════
+init();
+</script>
+</body>
+</html>
